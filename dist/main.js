@@ -7,9 +7,9 @@ main().catch(handleError);
 const DEFAULT_NUMBER_DAYS_TO_KEEP = 15;
 async function deleteReleases(numberDaysToKeep, isPrerelease = true, owner, repo, github) {
     const { repository } = await github.graphql(`
-			query($repo: String!, $owner: String!, $first: Int!) {
+			query($repo: String!, $owner: String!, $last: Int!) {
 				repository(name: $repo, owner: $owner) {
-					releases(first: $first, orderBy: {field: CREATED_AT, direction: DESC}) {
+					releases(last: $last, orderBy: {field: CREATED_AT, direction: DESC}) {
 						nodes {
 							isPrerelease
 							name
@@ -27,7 +27,7 @@ async function deleteReleases(numberDaysToKeep, isPrerelease = true, owner, repo
 		`, {
         owner: owner,
         repo: repo,
-        first: 100
+        last: 100
     });
     const now = DateTime.now();
     const releasesToDelete = repository.releases.nodes
