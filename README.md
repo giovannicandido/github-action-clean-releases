@@ -10,6 +10,8 @@ This action is useful to keep a clean release tags and deploy prereleases freque
 and don't want to a clutter tag system, or if you experiment a lot an release fast but want to keep only the production releases,
 this action can help you.
 
+**Note:** This action will see a max of 100 releases and prereleases and will filter this list
+
 ## Reading step results
 
 The return value of the script will be in the step's outputs under the
@@ -56,6 +58,18 @@ By default, github-script will use the token provided to your workflow.
   uses: giovannicandido/github-action-clean-releases@main
   with:
     numberDaysToKeep: 10
+```
+
+### Remove all releases and drafts
+
+Use with caution, this will remove software already released.
+
+```yaml
+- name: Clean all releases older then 10 days
+  uses: giovannicandido/github-action-clean-releases@main
+  with:
+    numberDaysToKeep: 10
+    isPrerelease: False
 ```
 
 ### Using a separate GitHub token

@@ -43,9 +43,9 @@ async function deleteReleases(numberDaysToKeep: number,
 
 	const {repository} = await github.graphql<ReleaseResponse>(
 			`
-			query($repo: String!, $owner: String!, $first: Int!) {
+			query($repo: String!, $owner: String!, $last: Int!) {
 				repository(name: $repo, owner: $owner) {
-					releases(first: $first, orderBy: {field: CREATED_AT, direction: DESC}) {
+					releases(last: $last, orderBy: {field: CREATED_AT, direction: DESC}) {
 						nodes {
 							isPrerelease
 							name
@@ -64,7 +64,7 @@ async function deleteReleases(numberDaysToKeep: number,
 		{
 			owner: owner,
 			repo: repo,
-			first: 100
+			last: 100
 		}
 	)
 
