@@ -62,7 +62,6 @@ By default, github-script will use the token provided to your workflow.
 
 ### Remove all older than 10 days but keep the last 4
 
-Use with caution, this will remove software already released.
 
 ```yaml
 - name: Clean all releases older then 10 days
@@ -70,7 +69,6 @@ Use with caution, this will remove software already released.
   with:
     numberDaysToKeep: 10
     numberToKeep: 4
-    isPrerelease: False
 ```
 
 ### Remove all releases and drafts
