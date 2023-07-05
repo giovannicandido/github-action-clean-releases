@@ -9,6 +9,10 @@ inputs:
     description: Number of days to keep the prerelease
     required: false
     default: "15"
+  numberToKeep:
+    description: Number of release to keep no matter the number of days. It will keep the last prereleases
+    required: false
+    default: "2"
   isPrerelease:
     description: Filter by prerelease status
     required: false
@@ -33,4 +37,4 @@ outputs:
     description: The return value of the script, stringified with `JSON.stringify`
 runs:
   using: node16
-  main: dist/main.js
+  main: dist/index.js

@@ -3,6 +3,7 @@ import * as core from '@actions/core'
 import {context, getOctokit} from '@actions/github'
 import {GitHub} from '@actions/github/lib/utils'
 import {requestLog} from "@octokit/plugin-request-log"
+import * as _ from "lodash"
 
 process.on('unhandledRejection', handleError)
 main().catch(handleError)
@@ -34,8 +35,10 @@ type Options = {
 }
 
 const DEFAULT_NUMBER_DAYS_TO_KEEP = 15
+const DEFAULT_NUMBER_TO_KEEP = 2
 
 async function deleteReleases(numberDaysToKeep: number,
+															numberToKeep: number,
 															isPrerelease = true,
 															owner: string,
 															repo: string,
@@ -70,7 +73,7 @@ async function deleteReleases(numberDaysToKeep: number,
 
 	const now = DateTime.now()
 
-	const releasesToDelete = repository.releases.nodes
+	const releases = repository.releases.nodes
 		.map(r => {
 			return {
 				id: r.databaseId,
@@ -82,6 +85,8 @@ async function deleteReleases(numberDaysToKeep: number,
 		})
 		.filter(r => r.isPrerelease === isPrerelease)
 		.filter(r => now.diff(r.publishedAt, "days").days > numberDaysToKeep)
+
+	const releasesToDelete = _.drop(releases, numberToKeep)
 
 	if (releasesToDelete.length === 0) {
 		console.log('No releases to delete')
@@ -117,10 +122,15 @@ async function main(): Promise<void> {
 	const userAgent = core.getInput('user-agent')
 	const previews = core.getInput('previews')
 	let numberDaysToKeep = parseInt(core.getInput("numberDaysToKeep", {required: true, trimWhitespace: true}))
+	let numberToKeep = parseInt(core.getInput("numberToKeep", {required: true, trimWhitespace: true}))
 	let isPrerelease = core.getBooleanInput("isPrerelease", {required: true, trimWhitespace: true})
 
 	if(!numberDaysToKeep) {
 		numberDaysToKeep = DEFAULT_NUMBER_DAYS_TO_KEEP
+	}
+
+	if(!numberToKeep) {
+		numberToKeep = DEFAULT_NUMBER_TO_KEEP
 	}
 
 	const opts: Options = {
@@ -132,7 +142,7 @@ async function main(): Promise<void> {
 	const github = getOctokit(token, opts, requestLog)
 
 	// Using property/value shorthand on `require` (e.g. `{require}`) causes compilation errors.
-	const result = await deleteReleases(numberDaysToKeep, isPrerelease, context.repo.owner, context.repo.repo, github)
+	const result = await deleteReleases(numberDaysToKeep, numberToKeep, isPrerelease, context.repo.owner, context.repo.repo, github)
 
 	let encoding = core.getInput('result-encoding')
 	encoding = encoding ? encoding : 'json'
