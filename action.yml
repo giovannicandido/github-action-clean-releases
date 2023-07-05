@@ -1,0 +1,36 @@
+name: Github Clean Releases
+author: Giovanni Silva
+description: Clean prerelease and Tags from a repo that are older than a number of days
+branding:
+  color: blue
+  icon: code
+inputs:
+  numberDaysToKeep:
+    description: Number of days to keep the prerelease
+    required: false
+    default: "15"
+  isPrerelease:
+    description: Filter by prerelease status
+    required: false
+    default: True
+  github-token:
+    description: The GitHub token used to create an authenticated client
+    default: ${{ github.token }}
+    required: false
+  debug:
+    description: Whether to tell the GitHub client to log details of its requests. true or false. Default is to run in debug mode when the GitHub Actions step debug logging is turned on.
+    default: ${{ runner.debug == '1' }}
+  user-agent:
+    description: An optional user-agent string
+    default: actions/github-action-clean-releases
+  previews:
+    description: A comma-separated list of API previews to accept
+  result-encoding:
+    description: Either "string" or "json" (default "json")—how the result will be encoded
+    default: json
+outputs:
+  result:
+    description: The return value of the script, stringified with `JSON.stringify`
+runs:
+  using: node16
+  main: dist/index.js

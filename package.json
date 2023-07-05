@@ -1,0 +1,40 @@
+{
+  "name": "github-action-clean-releases",
+  "version": "1.0.0",
+  "description": "A GitHub action to remove releases and tags from a repo in a number of days",
+  "main": "dist/index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "tsc && node dist/main.js",
+    "build": "tsc",
+    "lint": "eslint src __test__",
+    "format:check": "prettier --check src __test__",
+    "style:check": "run-p --continue-on-error --aggregate-output format:check lint",
+    "pre-commit": "tsc",
+    "prepare": "pnpm install"
+  },
+  "author": "Giovanni Silva",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@types/luxon": "^3.3.0",
+    "@types/node": "^20.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.8",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.1.1",
+    "@octokit/core": "^4.2.4",
+    "@octokit/plugin-request-log": "^3.0.0",
+    "@octokit/rest": "^19.0.13",
+    "luxon": "^3.3.0"
+  }
+}
